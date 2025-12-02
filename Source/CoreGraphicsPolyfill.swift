@@ -7,7 +7,7 @@
 
 import Foundation
 
-#if os(WASI) || os(Linux) || os(Android)
+#if os(WASI) || os(Linux) || os(Android) || os(Android)
     private let KAPPA: CGFloat = 0.5522847498  // 4 *(sqrt(2) -1)/3
 
     public struct CGAffineTransform: Equatable {
@@ -119,39 +119,39 @@ import Foundation
         public func applyWithBlock(_ block: (UnsafePointer<CGPathElement>) -> Void) {
             for element in elements {
                 let cgPathElement: CGPathElement
-                
+
                 switch element {
                 case .moveToPoint(let point):
                     cgPathElement = CGPathElement(
                         type: .moveToPoint,
                         points: (point, CGPoint.zero, CGPoint.zero)
                     )
-                    
+
                 case .addLineToPoint(let point):
                     cgPathElement = CGPathElement(
                         type: .addLineToPoint,
                         points: (point, CGPoint.zero, CGPoint.zero)
                     )
-                    
+
                 case .addQuadCurveToPoint(let control, let point):
                     cgPathElement = CGPathElement(
                         type: .addQuadCurveToPoint,
                         points: (control, point, CGPoint.zero)
                     )
-                    
+
                 case .addCurveToPoint(let control1, let control2, let point):
                     cgPathElement = CGPathElement(
                         type: .addCurveToPoint,
                         points: (control1, control2, point)
                     )
-                    
+
                 case .closeSubpath:
                     cgPathElement = CGPathElement(
                         type: .closeSubpath,
                         points: (CGPoint.zero, CGPoint.zero, CGPoint.zero)
                     )
                 }
-                
+
                 withUnsafePointer(to: cgPathElement) { pointer in
                     block(pointer)
                 }
@@ -236,14 +236,14 @@ import Foundation
     public struct CGPathElement {
         public var type: CGPathElementType
 
-        public var points: [CGPoint] 
+        public var points: [CGPoint]
 
         public init(type: CGPathElementType, points: (CGPoint, CGPoint, CGPoint)) {
             self.type = type
             self.points = [points.0, points.1, points.2]
         }
     }
-    
+
     /// Rules for determining which regions are interior to a path.
     ///
     /// When filling a path, regions that a fill rule defines as interior to the path are painted.
